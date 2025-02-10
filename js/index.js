@@ -83,7 +83,7 @@ const calculateUnit = () => {
   }
   const iv = parseFloat(value);
   const stdVal = eval(allA[currentAIndex][selectFromId][1]);
-  alert(allA[currentAIndex][selectFromId][1]+"\n"+stdVal+"\n"+iv+"\n"+value)
+ // alert(allA[currentAIndex][selectFromId][1]+"\n"+stdVal+"\n"+iv+"\n"+value)
   for (let i = 1; i < allA[currentAIndex].length; i++) {
     const temp = calVal(i, stdVal);
     toSelect.options[i - 1].text =
