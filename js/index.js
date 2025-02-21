@@ -19,13 +19,10 @@ const createNavBar = () => {
 
   GetJ(link,function(r){
     arn=r;
-   //if(r!=undefined){
-   //  alert(JSON.stringify(arn))
-   //}
+   
   if(arn.length>0){
     allA=allA.concat(arn);
-  //  alert(allA)
-  }
+    }
   
 
 
@@ -33,13 +30,17 @@ const createNavBar = () => {
   for (let i = 0; i < allA.length; i++) {
     const button = document.createElement("button");
     button.classList.add("nav-item");
+   // alert(i+"   "+allA[i][0])
     button.textContent = allA[i][0][0];
+    button.eq=allA[i];
     button.onclick = () => {
       currentAIndex = i;
       handleActiveNavItem();
       createSelect();
       calculateUnit();
-      tequiv.value=JSON.stringify(allA[i]);
+      tequiv.value=JSON.stringify(allA[i]).replace(/\[/g,"[\n");//.replace(/\]/g,"\n]\n");
+      
+        tequiv.eq=allA[i];
     };
     navbar.appendChild(button);
   }
@@ -105,7 +106,7 @@ const calculateUnit = () => {
   }
   const iv = parseFloat(value);
   const stdVal = eval(allA[currentAIndex][selectFromId][1]);
-  alert(allA[currentAIndex][selectFromId][1]+"\n"+stdVal+"\n"+iv+"\n"+value)
+ // alert(allA[currentAIndex][selectFromId][1]+"\n"+stdVal+"\n"+iv+"\n"+value)
   for (let i = 1; i < allA[currentAIndex].length; i++) {
     const temp = calVal(i, stdVal);
     toSelect.options[i - 1].text =
@@ -122,19 +123,73 @@ const calculateUnit = () => {
 
 
 function addEq(){
-  if(tequiv.value!=""){
-    var a=JSON.parse(tequiv.value);
-if(Array.isArray(a)){
- arn.push(a);
- //alert(arn);
+ 
+setUpEq(function(e){
+arn.push(e);
  if(confirm("New equivalence will be added, ok to procede")){
-   UpdateJ(link,arn,function(r){alert("all done,app will be restarted...");window.location.reload()})
+     UpdateJ(link,arn,function(r){alert("all done,app will be restarted...");window.location.reload()})
  }
-}
-else alert("It is not an array")
-}
+})
+
 }
 
+function setUpEq(callback){
+  var c=true;
+  var t=prompt("Title?");
+var u=prompt("Base Unit?");
+var aru=[[t,t[0]+"A"],[u,"iv","iv"]];
+while(c){
+  var a=[];
+var eu=prompt("Equals to 'Unit name'?")
+if(eu===null){ c=false;break;}
+var ev=prompt("1 "+u+" equals to 'Unit value'?");
+if(ev===null){ c=false;break;}
+else{
+a=[eu,"iv/"+ev,"iv*"+ev];
+aru.push(a);
+//alert(JSON.stringify(aru))
+}
+
+}
+//alert(aru);
+if(callback) callback(aru);
+else return aru;
+
+}
+
+function delEq(){
+  
+var i=allA.indexOf(tequiv.eq);
+if(i<=5){alert("You can not delete base eqivalences");return}
+
+if(confirm("Are you sure you want to delete actual equivalence?"))
+{
+  i=i-6;
+arn.splice(i,1);
+
+UpdateJ(link,arn,function(){alert("Equiv has been deleted, app wiil restart");window.location.reload()})
+
+}
+}
+function updEq(){
+  
+  var i=allA.indexOf(tequiv.eq);
+  if(i<=5){alert("You can not update base eqivalences");return}
+  
+  if(confirm("Are you sure you want to Update actual equivalence?"))
+  {
+ if(tequiv.value!=""){
+    var a=JSON.parse(tequiv.value);
+if(Array.isArray(a)){
+ //alert(a)
+    i=i-6;
+  arn[i]=a;
+  
+  UpdateJ(link,arn,function(){alert("Equiv has been updated, app wiil restart");window.location.reload()})
+  
+  }
+}}
+  }
 function GetJ(url, callback) {
 
 //var url  = "http://localhost:8080/api/v1/users";
