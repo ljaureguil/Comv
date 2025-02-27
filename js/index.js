@@ -1,7 +1,13 @@
-var link="https://jsonblob.com/api/1342186332981747712"
+
+
+
+
+
+var link="https://jsonblob.com/api/1342186332981747712";
+var linkf='https://jsonblob.com/api/1337444300245622784';
+var Formulas=[];
 var arn=[];
-
-
+obf={};
 let currentAIndex = 0;
 window.onload = () => createNavBar();
 const handleActiveNavItem = () => {
@@ -48,7 +54,18 @@ const createNavBar = () => {
 
 
 })
+GetJ(linkf,function(r){
+  obf=r;
+  Formulas=r.formulas;
+ // alert(JSON.stringify(r))
 
+ for(var i=0;i<Formulas.length;i++){
+  f=Formulas[i].split("\n")[0].split("//")[1];
+  
+  sformulas.innerHTML+="<option>"+f+"</option>";
+  
+  }
+})
 };
 
 const fromSelect = document.getElementById("from-select");
@@ -190,6 +207,80 @@ if(Array.isArray(a)){
   }
 }}
   }
+
+////////////////////////
+function verifyF(f){
+for(var i=0;i<Formulas.length;i++){
+  var sf=Formulas[i].split("\n")[0];
+ 
+  f=f.split("\n")[0];
+  if(sf===f) return i;
+ // alert(f+"\n\n"+sf)
+}
+return -1;
+
+}
+
+addf = function(){
+  if(tequiv.value[0]!='/'){alert("You need to include Title: '//Title' in the first line");return}
+  var vf=verifyF(tequiv.value)
+ if(vf===-1){
+    Formulas.push(tequiv.value);
+   localStorage.setItem("formulas",JSON.stringify(Formulas));
+  UpdateJ(linkf,obf,function(){alert("All done... app will restart");window.location.reload()})
+  alert("Fourmula Saved");
+  }
+  else{
+    if(confirm("Formula exist, do you want to updated?")){
+      Formulas[vf]=tequiv.value;
+      localStorage.setItem("formulas",JSON.stringify(Formulas));
+     UpdateJ(linkf,obf,function(){alert("All done... app will restart");window.location.reload()})
+     alert("Fourmula Updated");
+    }
+  }
+  }
+  
+  selFormula = function(f){
+  tequiv.value=Formulas[f-1];
+  }
+  
+  updateFormula = function(){
+  
+  var f=sformulas.selectedIndex;
+  if(confirm("Are you sure you want to modify "+sformulas.value+"?")){
+  Formulas[f-1]=tequiv.value;
+   localStorage.setItem("formulas",JSON.stringify(Formulas));
+  
+  alert("Formula "+sformulas.value+" has been updated");
+  }
+  
+  }
+  delFormula = function(){
+  var f=sformulas.selectedIndex;
+  if(confirm("Are you sure you want to DELETE "+sformulas.value+"?")){
+  Formulas.splice(f-1,1);
+  
+   localStorage.setItem("formulas",JSON.stringify(Formulas));
+  
+  alert("Formula "+sformulas.value+" has been DELETED");
+  }
+  
+  
+  }
+  
+  
+  
+
+
+
+
+
+
+
+
+
+////////////////////////
+
 function GetJ(url, callback) {
 
 //var url  = "http://localhost:8080/api/v1/users";
@@ -226,6 +317,10 @@ xhr.onload = function() {
 }
 xhr.send(json);
 }
+
+
+
+
 
 
 
