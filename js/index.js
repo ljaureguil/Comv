@@ -244,28 +244,26 @@ addf = function(){
   tequiv.value=Formulas[f-1];
   }
   
-  updateFormula = function(){
-  
-  var f=sformulas.selectedIndex;
-  if(confirm("Are you sure you want to modify "+sformulas.value+"?")){
-  Formulas[f-1]=tequiv.value;
-   localStorage.setItem("formulas",JSON.stringify(Formulas));
-  
-  alert("Formula "+sformulas.value+" has been updated");
-  }
-  
-  }
   delFormula = function(){
-  var f=sformulas.selectedIndex;
-  if(confirm("Are you sure you want to DELETE "+sformulas.value+"?")){
-  Formulas.splice(f-1,1);
+    if(confirm("Are you sure you want to DELETE "+sformulas.value+"?")){
+  var f=verifyF(tequiv.value)
+  if(f===-1){
+     
+   alert("Fourmula Doesn't Exist");
+   }
+   else{
+ 
+     if(confirm("Formula found, do you want to delete it?")){
+     Formulas.splice(f,1);
   
-   localStorage.setItem("formulas",JSON.stringify(Formulas));
-  
-  alert("Formula "+sformulas.value+" has been DELETED");
-  }
-  
-  
+       localStorage.setItem("formulas",JSON.stringify(Formulas));
+      UpdateJ(linkf,obf,function(){alert("All done... app will restart");window.location.reload()})
+      alert("Fourmula Updated");
+     }
+ 
+    }
+
+}
   }
   
   
