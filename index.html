@@ -64,6 +64,7 @@
       <option>Update actual Eqivalence</option>
       <option>Delete actual Equivalence</option>
       <option>Save/Update Formula</option>
+           <option>Delete Formula</option>
       </select>
       <select id="sformulas" oninput="selFormula(this.selectedIndex)">
         <option>Select a formula</option>
@@ -92,6 +93,7 @@ if(s===1) addEq();
 if(s===2) updEq();
 if(s===3)  delEq();
 if(s===4) addf();
+if(s===5) delFormula();
 //alert(delEq)
 sops.selectedIndex=0;
 
